@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        form {
+            margin: 0 auto;
+            width: 22rem;
+            padding: 1em;
+            border: 1px solid #ccc;
+            border-radius: 1em;
+        }
+
+        .heading {
+            margin: 1rem auto;
+            width: max-content;
+        }
+
+        input {
+            font: 1em sans-serif;
+            width: 300px;
+            box-sizing: border-box;
+            border: 1px solid #999;
+            margin-top: 2rem;
+        }
+
+        input:focus {
+            border-color: #000;
+        }
+
+        input[type="submit"] {
+            display: block !important;
+            margin: 1rem auto;
+            width: max-content;
+        }
+
+        .dataList {
+            margin: 1rem auto;
+            width: 24rem;
+            padding: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 1em;
+        }
+
+        li {
+            margin-top: 1rem;
+            padding-right: 2rem;
+            font-size: larger;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h1 class="heading">Todo App</h1>
+        <form role="form" id="pForm" method="POST">
+            <label for="taskId">Task:</label>
+            <input id="taskId" type="text" />
+            <input type="submit" value="Submit">
+        </form>
+        <div class="dataList">
+            <ul id="dataList">
+            </ul>
+        </div>
+    </div>
+    <script>
+        let taskArray = []
+        let todoForm = document.getElementById("pForm");
+        let dataListElm = document.getElementById("dataList");
+
+        todoForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            addTask();
+            displayTask();
+        });
+
+        function addTask(){
+            let taskInput = document.getElementById("taskId");
+            taskArray.push(taskInput.value)
+            taskInput.value = ""
+        }
+
+        function deleteTask(e){
+            let element = e.target;
+            let {taskId} = element.dataset
+
+            taskArray.splice(taskId, 1)
+            displayTask()
+        }
+
+        function displayTask(){
+            if(taskArray.length == 0) {
+                //dispaly no task 
+                dataListElm.innerHTML = "<span>No Tasks Present</span>"
+            } else {
+                dataListElm.innerHTML = ""
+                taskArray.map((taskData, taskId)=>{
+                    let liElm =  document.createElement("li")
+                    liElm.innerText = taskData
+                    
+                    let deleteBtn = document.createElement("button")
+                    deleteBtn.innerText = "X"
+                    deleteBtn.setAttribute("data-task-id",taskId)
+                    deleteBtn.addEventListener('click', deleteTask)
+                    
+                    liElm.appendChild(deleteBtn)
+                    dataListElm.appendChild(liElm)                   
+                })
+            }
+        }
+
+        displayTask()
+
+    </script>
+</body>
+
+</html>
